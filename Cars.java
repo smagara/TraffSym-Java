@@ -1,11 +1,12 @@
 // Manage behavior/drawing of the cars
 
-import java.awt.*;
-import java.applet.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Vector;
 
 // Car list to hold traffic from a given direction
-class CarList extends Vector
+class CarList extends Vector<Car>
 {
 	Car GetCar(int idx)
 	{
@@ -463,26 +464,55 @@ public class Cars  extends Canvas
 		SouthCars.DrawCars(drawingArea.getGraphics());
 	}
 	
-	public void paint(Graphics canvasG)	{		canvasG.clearRect(0, 80, 120, 20);
+	public void paint(Graphics canvasG)
+	{
+		canvasG.clearRect(0, 80, 120, 20);
 		canvasG.setColor(Color.black);
 		canvasG.drawString(m_strDebug, 10, 90);
 	}
 	
-	// for debugging info in a region of the screen	public void DebugPrint(String str)	{
+	// for debugging info in a region of the screen
+	public void DebugPrint(String str)
+	{
 		m_strDebug = str;
-		this.paint(drawingArea.getGraphics());	}
+		this.paint(drawingArea.getGraphics());
+	}
 
-	// Display the traffic state panel	public void DisplayState()	{		Graphics canvasG = drawingArea.getGraphics();
-		Color oColor= canvasG.getColor();		int nWestStopped = GetStoppedCount(WestCars);		int nEastStopped = GetStoppedCount(EastCars);		int nNorthStopped = GetStoppedCount(NorthCars);		int nSouthStopped = GetStoppedCount(SouthCars);
+	// Display the traffic state panel
+	public void DisplayState()
+	{
+		Graphics canvasG = drawingArea.getGraphics();
+		Color oColor= canvasG.getColor();
+		int nWestStopped = GetStoppedCount(WestCars);
+		int nEastStopped = GetStoppedCount(EastCars);
+		int nNorthStopped = GetStoppedCount(NorthCars);
+		int nSouthStopped = GetStoppedCount(SouthCars);
 		int nEastTurnStopped = GetStoppedCount(WestTurnCars);
 		int nWestTurnStopped = GetStoppedCount(EastTurnCars);
 		
 		canvasG.clearRect(190, 0, 80, 100);
-		canvasG.setColor(Color.black);		canvasG.drawRect(190, 0, 80, 100);		canvasG.setColor(Color.yellow);
-		canvasG.fillRect(190, 0, 80, 100);		canvasG.setColor(Color.red);		canvasG.drawString("Waiting Cars", 190, 10);
-		canvasG.setColor(Color.blue);		canvasG.drawString("East:",             190, 25);		canvasG.drawString(""+nEastStopped,     250, 25);		canvasG.drawString("West:",             190, 40);
-		canvasG.drawString(""+nWestStopped,     250, 40);		canvasG.drawString("North:",            190, 55);		canvasG.drawString(""+nNorthStopped,    250, 55);		canvasG.drawString("South:",            190, 70);		canvasG.drawString(""+nSouthStopped,    250, 70);		canvasG.drawString("EastTurn:",         190, 85);		canvasG.drawString(""+nEastTurnStopped, 250, 85);		canvasG.drawString("WestTurn:",         190, 100);		canvasG.drawString(""+nWestTurnStopped, 250, 100);		
-		// Reset		canvasG.setColor(oColor);
+		canvasG.setColor(Color.black);
+		canvasG.drawRect(190, 0, 80, 100);
+		canvasG.setColor(Color.yellow);
+		canvasG.fillRect(190, 0, 80, 100);
+		canvasG.setColor(Color.red);
+		canvasG.drawString("Waiting Cars", 190, 10);
+		canvasG.setColor(Color.blue);
+		canvasG.drawString("East:",             190, 25);
+		canvasG.drawString(""+nEastStopped,     250, 25);
+		canvasG.drawString("West:",             190, 40);
+		canvasG.drawString(""+nWestStopped,     250, 40);
+		canvasG.drawString("North:",            190, 55);
+		canvasG.drawString(""+nNorthStopped,    250, 55);
+		canvasG.drawString("South:",            190, 70);
+		canvasG.drawString(""+nSouthStopped,    250, 70);
+		canvasG.drawString("EastTurn:",         190, 85);
+		canvasG.drawString(""+nEastTurnStopped, 250, 85);
+		canvasG.drawString("WestTurn:",         190, 100);
+		canvasG.drawString(""+nWestTurnStopped, 250, 100);
+		
+		// Reset
+		canvasG.setColor(oColor);
 	}
 	
 	public void AdjustTraffic(_INPUT_VECTOR Input)

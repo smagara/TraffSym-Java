@@ -1,6 +1,4 @@
 // Cyclic Executive, running as its own thread
-import java.awt.*;
-import java.applet.*;
 import java.util.Date;
 
 public class Executive implements Runnable
@@ -8,7 +6,7 @@ public class Executive implements Runnable
 	private _INPUT_VECTOR InputVector;
 	private _INTERSECTION_STATE IntersectionState;
 	private DrawCanvas drawingArea;
-	Thread theThread;
+	Thread theThread = null;
 	Cars theCars;
 	public boolean IsRunning = false;
 	private boolean bAlternate = true;
@@ -24,8 +22,9 @@ public class Executive implements Runnable
 	// Start the executive
 	public void start()
 	{
-		IsRunning = true;
+		theThread = null;
 		theThread = new Thread(this);
+		IsRunning = true;
 		theThread.start();
 	}
 	
@@ -34,8 +33,12 @@ public class Executive implements Runnable
 	{
 		try
 		{
-			theThread.stop();
-			IsRunning = false;
+			if (IsRunning)
+			{
+				// barring a redesign and since stop() is deprecated, destroy the thread and use our IsRunning flag as a gate
+				IsRunning = false;
+				theThread = null;
+			}
 		}
 		catch(Exception e)
 		{
@@ -77,7 +80,7 @@ public class Executive implements Runnable
 	// Move the traffic appropriately
 	private void AdjustTraffic()
 	{
-		//try
+		try
 		{
 			theCars.AdjustTraffic(InputVector);
 			
@@ -90,9 +93,9 @@ public class Executive implements Runnable
 			// Display traffic state
 			theCars.DisplayState();
 		}
-		//catch(Exception e)
+		catch(Exception e)
 		{
-			//e.notifyAll();
+			e.notifyAll();
 		}
 	}
 
@@ -106,6 +109,8 @@ public class Executive implements Runnable
 	// One unit of time: transition to next state
 	private void Tick()
 	{
+		if (!IsRunning) return;
+
 		Date tmTime = new Date();
 
 		// Decrement counter

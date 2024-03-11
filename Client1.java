@@ -1,13 +1,28 @@
 /* This Client1 used to transfer 2000 float numbers to ServerTest2*/
 
-import java.applet.Applet;
-import java.awt.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
 
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
-public class Client1 extends Applet
+public class Client1 extends Frame // Applet
 {
 	int svpt = 5001; 
 	float N=0;
@@ -126,14 +141,14 @@ final int setupsocket()
 	return(0);
 }
 
-public boolean action(Event evt, Object arg) 
+public boolean action(ActionEvent evt, Object arg) 
 {
-  if (evt.target==Btn) 
+  if (evt.getSource()==Btn) 
   {
 	Btn.setLabel("...Running ");
 		
-	N = (new Float(num1Field.getText())).floatValue();
-	M = (new Float(num2Field.getText())).floatValue();
+	N = Float.valueOf(num1Field.getText());
+	M = Float.valueOf(num2Field.getText());
 
 	setupsocket();
 
@@ -177,7 +192,7 @@ public boolean action(Event evt, Object arg)
   }
 		
  
-  else if (evt.target==Reset) 
+  else if (evt.getSource()==Reset) 
   {
 	Btn.setLabel(Btn_string);
 	Chk.setText("  ");
@@ -190,7 +205,8 @@ public boolean action(Event evt, Object arg)
 }
 
 class MyCanvas extends Canvas
-{	static int n = 1;
+{
+	static int n = 1;
 	MyCanvas()
 	{
 		super();
@@ -232,7 +248,8 @@ class MyCanvas extends Canvas
 	}
 	
 	public void paint(Graphics canvasG, float s[], int num)
-	{    n++;
+	{
+    n++;
 	      int temp1 = 25;
 	      int temp2 = 25;
 	      int temp3 = 400;
@@ -264,6 +281,25 @@ class MyCanvas extends Canvas
                  canvasG.drawLine(25+4*(n-1), 300-(int)(25*s[num-1]), 
 25+4*n, 300-(int)(25*s[num]));  
 	}
+
+		// main entry point: show initial form
+        public static void main(String[] args)
+        {
+			Client1 appletNot = new Client1();
+			appletNot.setBounds(50, 50, 800, 500);
+			appletNot.setVisible(true);
+        	appletNot.addWindowListener(
+                        new WindowAdapter()
+                        {
+                                public void windowClosing(WindowEvent e)
+                                {
+                                        System.exit(-1);
+                                }
+                        }
+                );
+			appletNot.init();
+        }
+
 }
 
 
